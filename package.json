@@ -1,0 +1,12 @@
+{
+  "name": "google_calendar_script",
+  "version": "1.0.0",
+  "description": "Script to manage Google Calendar events",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ana Filipa Silva",
+  "license": "ISC"
+}
