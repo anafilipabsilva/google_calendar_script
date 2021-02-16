@@ -12,8 +12,8 @@ class GoogleAuthenticationClient {
     accessToken;
     config = {
         client: {
-          id: 'client_id',
-          secret: 'client_secret'
+            id: 'client_id',
+            secret: 'client_secret'
         },
         auth: {
             tokenHost: 'https://oauth2.googleapis.com',
@@ -23,7 +23,7 @@ class GoogleAuthenticationClient {
         },
     };
 
-    redirectUri = 'https://bed1c44a85cf.ngrok.io/auth/callback';
+    redirectUri = 'https://<ngrok_id>.ngrok.io/auth/callback';
     scope = 'https://www.googleapis.com/auth/calendar';
 
     authorizationConfig = {
