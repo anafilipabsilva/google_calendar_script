@@ -9,7 +9,7 @@ class SyncCalendar {
     async sync(accessToken) {
 
         const google_calendar = new gcal.GoogleCalendar(accessToken.token.access_token);
-        const calendarId = 'calendarId';
+        const calendarId = 'calendar_id';
 
         const jsonArray = await utilities.getData();
 
@@ -34,10 +34,16 @@ class SyncCalendar {
         const commonEmailIndex = utilities.findFirstCommonEmail(jsonArray, events);
 
         const newEmailsList = utilities.orderEmailsList(jsonArray, commonEmailIndex);
+        console.log(events.length, newEmailsList.length)
 
         const indexToDelete = utilities.findFirstIndexToDelete(newEmailsList, events);
+        if(indexToDelete == events.length && newEmailsList.length == events.length) {
+            console.log("There were no events to update")
+            return;
+        }
 
         for (let i = indexToDelete; i < events.length; i++) {
+            console.log(`Deleting ${events[i].attendees[0].email}`)
             await new Promise((resolve, reject) => {
                 google_calendar.events.delete(calendarId, events[i].id, {}, (err, response) => {
                     if(err != null) {
@@ -47,10 +53,22 @@ class SyncCalendar {
                     }
                 });
             })
+            console.log(`${events[i].attendees[0].email} deleted`)
+        }
+        console.log("The events were deleted")
+
+        let startDate;
+        let endDate;
+
+        if(indexToDelete == events.length) {
+            startDate = moment(events[indexToDelete-1].start.date).add(7, 'days');
+
+            endDate = moment(events[indexToDelete-1].end.date).add(7, 'days');
+        } else {
+            startDate = events[indexToDelete].start.date;
+            endDate = events[indexToDelete].end.date;
         }
 
-        const startDate = events[indexToDelete].start.date;
-        const endDate = events[indexToDelete].end.date;
         let indexToMultiply = 0;
 
         for (let i = indexToDelete; i < newEmailsList.length; i++) {
@@ -59,6 +77,7 @@ class SyncCalendar {
             indexToMultiply++;
 
             let guestEmail = newEmailsList[i].Email;
+            console.log(`Creating event for ${guestEmail}`)
             let eventName =  `Firedrill ${newEmailsList[i].Name}`;
 
             const body = {
@@ -73,7 +92,7 @@ class SyncCalendar {
                         email: guestEmail
                     }
                 ],
-                description: "https://talkdesk.atlassian.net/wiki/spaces/QC/pages/1954022223/QA+Firedrill+Procedure",
+                description: 'description',
                 guestsCanInviteOthers: true,
                 guestsCanModify: true,
                 summary: eventName
@@ -90,7 +109,9 @@ class SyncCalendar {
                     }
                 });
             })
+            console.log(`Event created for ${guestEmail}`)
         }
+        console.log("Synchronization completed")
     }
 }
 

@@ -38,8 +38,6 @@ class Utilities {
     }
 
     findFirstIndexToDelete(emailsList, events) {
-        console.dir(emailsList);
-        console.dir(events);
         for (const index in events) {
             if (emailsList[index] == null) {
                 return index;
