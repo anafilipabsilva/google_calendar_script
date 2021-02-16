@@ -18,6 +18,6 @@ This is a step-by-step guide to use this script:
 
 4. You will need to have a list of names and emails separated by a comma (you can export a Google Sheet in csv format). You can see an example [here](./src/qa_data.csv).
 
-5. Finally, you just need to have the ID of the calendar you want to update. Just go to the settings of the calendar, and you will find the Calendar ID there. Then, you just need to go to the [sync calendar interactor](./src/interactors/sync.calendar.js) and place this information in the `calendarId` variable.
+5. Finally, you just need to have the ID of the calendar you want to update and the description for the event. Just go to the settings of the calendar, and you will find the Calendar ID there. Then, you just need to go to the [sync calendar interactor](./src/interactors/sync.calendar.js) and place this information in the `calendarId` variable, and change the `description` variable to have the text you want.
 
 6. And you're good to go! Just run `yarn start` on your terminal and open a browser tab with this endpoint: `https://<ngrok_id>.ngrok.io/sync`. The magic will happen!
