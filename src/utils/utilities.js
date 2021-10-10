@@ -1,4 +1,6 @@
-const csvFilePath = '/Users/ana.brandao/projects/google_calendar_script/src/qa_data.csv';
+require('dotenv').config();
+
+const csvFilePath = process.env.CSV_FILE_PATH;
 const csv = require('csvtojson')
 
 class Utilities {
@@ -39,6 +41,7 @@ class Utilities {
 
     findFirstIndexToDelete(emailsList, events) {
         for (const index in events) {
+            console.log(events[index].attendees[0]);
             if (emailsList[index] == null) {
                 return index;
             }

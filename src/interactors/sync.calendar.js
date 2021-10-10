@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const gcal = require('google-calendar');
 const moment = require('moment');
 
@@ -9,11 +11,12 @@ class SyncCalendar {
     async sync(accessToken) {
 
         const google_calendar = new gcal.GoogleCalendar(accessToken.token.access_token);
-        const calendarId = 'calendar_id';
+        const calendarId = process.env.CALENDAR_ID;
 
         const jsonArray = await utilities.getData();
 
         const date = new Date().toISOString();
+        console.log(date);
         const queryParamsList = {
             singleEvents: true,
             orderBy: "startTime",
@@ -34,7 +37,7 @@ class SyncCalendar {
         const commonEmailIndex = utilities.findFirstCommonEmail(jsonArray, events);
 
         const newEmailsList = utilities.orderEmailsList(jsonArray, commonEmailIndex);
-        console.log(events.length, newEmailsList.length)
+        console.log(events.length, newEmailsList.length);
 
         const indexToDelete = utilities.findFirstIndexToDelete(newEmailsList, events);
         if(indexToDelete == events.length && newEmailsList.length == events.length) {
@@ -62,7 +65,6 @@ class SyncCalendar {
 
         if(indexToDelete == events.length) {
             startDate = moment(events[indexToDelete-1].start.date).add(7, 'days');
-
             endDate = moment(events[indexToDelete-1].end.date).add(7, 'days');
         } else {
             startDate = events[indexToDelete].start.date;
@@ -92,13 +94,13 @@ class SyncCalendar {
                         email: guestEmail
                     }
                 ],
-                description: 'description',
+                description: 'https://talkdesk.atlassian.net/wiki/spaces/QC/pages/1954022223/QA+Firedrill+Procedure',
                 guestsCanInviteOthers: true,
                 guestsCanModify: true,
                 summary: eventName
             }
             const queryParams = {
-                //sendUpdates: "all"
+                sendUpdates: "all"
             }
             await new Promise((resolve, reject) => {
                 google_calendar.events.insert(calendarId, body, queryParams, (err, response) => {

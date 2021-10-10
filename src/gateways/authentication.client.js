@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const { AuthorizationCode } = require('simple-oauth2');
 
 class GoogleAuthenticationClient {
@@ -12,8 +14,8 @@ class GoogleAuthenticationClient {
     accessToken;
     config = {
         client: {
-            id: 'client_id',
-            secret: 'client_secret'
+            id: process.env.CLIENT_ID,
+            secret: process.env.CLIENT_SECRET
         },
         auth: {
             tokenHost: 'https://oauth2.googleapis.com',
@@ -23,27 +25,26 @@ class GoogleAuthenticationClient {
         },
     };
 
-    redirectUri = 'https://<ngrok_id>.ngrok.io/auth/callback';
+    redirectUri = '/auth/callback';
     scope = 'https://www.googleapis.com/auth/calendar';
-
-    authorizationConfig = {
-        redirect_uri: this.redirectUri,
-        scope: this.scope,
-        state: '<state>'
-    }
 
     client = new AuthorizationCode(this.config);
 
-    authenticationUrl() {
-        return this.client.authorizeURL(this.authorizationConfig);
+    authenticationUrl(address) {
+        return this.client.authorizeURL({
+            redirect_uri: `${address}${this.redirectUri}`,
+            scope: this.scope,
+            state: '<state>'
+        });
     }
 
-    async getToken(code) {
+    async getToken(code, address) {
         const tokenParams = {
             code: code,
-            redirect_uri: this.redirectUri,
+            redirect_uri: `${address}${this.redirectUri}`,
             scope: this.scope,
         };
+        console.log(tokenParams);
         this.accessToken = await this.client.getToken(tokenParams);
     }
 }

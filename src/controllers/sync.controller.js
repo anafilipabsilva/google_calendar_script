@@ -8,10 +8,10 @@ const calendar = new SyncCalendar();
 
 class SyncController {
 
-    start(port) {
+    start(address, port) {
         app.get('/sync', async (req, res) => {
             if (client.accessToken == null) {
-                res.redirect(client.authenticationUrl());
+                res.redirect(client.authenticationUrl(address));
                 return;
             }
 
@@ -22,7 +22,7 @@ class SyncController {
 
         app.get('/auth/callback', async (req, res) => {
             try {
-                await client.getToken(req.query.code);
+                await client.getToken(req.query.code, address);
                 res.redirect('/sync');
                 return;
 
@@ -32,7 +32,7 @@ class SyncController {
         })
 
         app.listen(port, () => {
-            console.log(`App listening at http://localhost:${port}`)
+            console.log(`App listening at ${address}`)
         })
     }
 }

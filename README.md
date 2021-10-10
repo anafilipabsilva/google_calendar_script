@@ -10,14 +10,12 @@ In this particular case, this was necessary to update an event, that happens eve
 
 This is a step-by-step guide to use this script:
 
-1. In this project, ngrok is used as the way to expose your local server. So, you need to download ngrok and run it on your machine, providing it the port of the network service. In this case, the port is 3000  (e.g. `./ngrok http 3000`).
+1. You need to have a client ID and a client secret for your Google account. You just need to create the OAuth 2.0 credentials on the [Google Cloud Platform > Credentials](https://console.cloud.google.com/apis/credentials). You also need to add the URI for the requests. This project uses Localtunnel to proxy all requests to your locally running webserver. So, the URI will be `https://<subdomain>.loca.lt/auth/callback` (<subdomain> must be defined in the .env file).
 
-2. You need to have a client ID and a client secret for your Google account. You just need to create the OAuth 2.0 credentials on the Google Cloud Platform > Credentials. The URI will be `https://<ngrok_id>.ngrok.io/auth/callback` (<ngrok_id> is the ID you will find in your terminal when you run ngrok, which means you may have to change it every time you run an new instance of ngrok).
+2. Add the client ID and client secret on the .env file.
 
-3. With the client ID, client secret and <ngrok_id>, you just need to go to the [authentication file](./src/gateways/authentication.client.js) and insert them in the correct variables.
+3. You will need to have a list of names and emails separated by a comma (you can export a Google Sheet in csv format). You can see an example [here](./src/qa_data_example.csv).
 
-4. You will need to have a list of names and emails separated by a comma (you can export a Google Sheet in csv format). You can see an example [here](./src/qa_data.csv).
+4. Finally, you just need to have the ID of the calendar you want to update, and the title and description for the event. Just go to the settings of the calendar, and you will find the Calendar ID there. Add this Calendar ID on the .env file. Then, you just need to go to the [sync calendar interactor](./src/interactors/sync.calendar.js) and change the `eventName` and `description` variables to have the data you want.
 
-5. Finally, you just need to have the ID of the calendar you want to update and the description for the event. Just go to the settings of the calendar, and you will find the Calendar ID there. Then, you just need to go to the [sync calendar interactor](./src/interactors/sync.calendar.js) and place this information in the `calendarId` variable, and change the `description` variable to have the text you want.
-
-6. And you're good to go! Just run `yarn start` on your terminal and open a browser tab with this endpoint: `https://<ngrok_id>.ngrok.io/sync`. The magic will happen!
+5. And you're good to go! Just run `yarn start` on your terminal and open a browser tab with this endpoint: `https://<subdomain>.loca.lt/sync`. The magic will happen!

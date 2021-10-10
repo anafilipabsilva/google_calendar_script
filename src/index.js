@@ -1,6 +1,12 @@
-const { SyncController } = require('./controllers/sync.controller')
+require('dotenv').config();
 
-const port = 3000
+const { SyncController } = require('./controllers/sync.controller');
+const localtunnel = require('localtunnel');
 
-const controller = new SyncController();
-controller.start(port);
+(async () => {
+    const port = 3000;
+    const tunnel = await localtunnel({ port, subdomain: process.env.SUBDOMAIN });
+
+    const controller = new SyncController();
+    controller.start(tunnel.url, port);
+})();       
